@@ -151,3 +151,65 @@ poetry run alembic upgrade head
 
 *A note: I'd like to add that alembic does not do a very good job with enums, so beware
 of that...*
+
+Bonus
+-----
+
+### Ignore tables in alembic
+
++ Add a function like this to your `env.py` file:
+
+```python
+# Imports, config and stuff
+# ...
+
+IGNORE_TABLES = [
+    "apscheduler_jobs",
+]
+
+
+def include_object(object, name, type_, reflected, compare_to):
+    """Should you include this table or not?"""
+
+    if type_ == 'table' and (name in IGNORE_TABLES
+                             or object.info.get("skip_autogenerate", False)):
+        return False
+
+    elif type_ == "column" and object.info.get("skip_autogenerate", False):
+        return False
+
+    return True
+
+# ...
+# Other functions and stuff
+```
+
++ Make sure to use `include_object` when configuring context for online or offline
+  migrations:
+
+```python
+def run_migrations_offline() -> None:
+    ...
+
+    context.configure(
+        url=settings.database_url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+        include_object=include_object,  # NEW!
+    )
+
+    ...
+
+def run_migrations_online() -> None:
+    ...
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            include_object=include_object,  # NEW!
+        )
+
+        ...
+```
