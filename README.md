@@ -8,3 +8,4 @@ Table of Contents
 -----------------
 
 + [Alembic migrations with SQLModel](./alembic-with-sqlmodel.md)
++ [Serve SwaggerUI with no CDN](./self-hosted-swagger-ui.md)
