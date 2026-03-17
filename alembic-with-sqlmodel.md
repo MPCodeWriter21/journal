@@ -5,14 +5,14 @@ Install alembic
 ---------------
 
 ```bash
-poetry add alembic
+uv add alembic
 ```
 
 Initialize the migrations
 -------------------------
 
 ```bash
-poetry run alembic init migrations
+uv run alembic init migrations
 ```
 
 Edit the files
@@ -143,7 +143,7 @@ migrations for our app.
 + You can apply your changes to the database using the `upgrade` command:
 
 ```bash
-poetry run alembic upgrade head
+uv run alembic upgrade head
 ```
 
 + Alembic has several other commands that I suggest you read about in your terminal
